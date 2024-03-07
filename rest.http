@@ -1,0 +1,34 @@
+POST http://localhost:3000/api/reg HTTP/1.1
+content-type: application/json
+
+{
+    "username": "admin10",
+    "password": "adminadmin"
+}
+
+###
+
+POST http://localhost:3000/api/auth HTTP/1.1
+content-type: application/json
+
+{
+    "username": "admin1",
+    "password": "adminadmin"
+}
+
+###
+
+GET http://localhost:3000/api/todos HTTP/1.1
+content-type: application/json
+
+###
+
+DELETE http://localhost:3000/api/todo/24 HTTP/1.1
+content-type: application/json
+
+###
+
+PUT http://localhost:3000/api/todo/24 HTTP/1.1
+content-type: application/json
+
+###
