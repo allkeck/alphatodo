@@ -1,9 +1,10 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { Container } from '../../layout/Container/Container';
 
 import { Todo, User } from '../../types';
+import { useHandleToClose } from '../../hooks/useHandleToClose';
 
 import styles from './styles.module.css';
 
@@ -12,7 +13,8 @@ export const Todos = () => {
   const [user, setUser] = useState<User | null>(null);
   const [titleTodo, setTitleTodo] = useState('');
   const [inputUpdateValue, setInputUpdateValue] = useState('');
-  const [isUpdating, setUpdating] = useState(false);
+  const [inputToUpdate, setInputToUpdate] = useState<number | null>(null);
+  const formRef = useRef(null);
   const [cookies] = useCookies(['token']);
 
   const getTodos = async () => {
@@ -43,6 +45,8 @@ export const Todos = () => {
       });
 
       await getTodos();
+
+      setTitleTodo('');
     } catch (error) {
       console.error(error);
     }
@@ -66,14 +70,38 @@ export const Todos = () => {
   const updateTodo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setUpdating(false);
-
-    const response = await fetch('/api/todo/', {
+    const response = await fetch('/api/todo', {
       method: 'put',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({
+        id: inputToUpdate,
+        title: inputUpdateValue,
+      }),
+    });
+
+    cancelUpdateInput();
+
+    const data = await response.json();
+
+    await getTodos();
+
+    console.log(data);
+  };
+
+  const checkTodo = async (event: ChangeEvent<HTMLInputElement>, id: number) => {
+    console.log(event);
+
+    const response = await fetch('/api/todo', {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: id,
+        isDone: true,
+      }),
     });
 
     const data = await response.json();
@@ -83,8 +111,13 @@ export const Todos = () => {
     console.log(data);
   };
 
-  const handleUpdateClick = () => {
-    setUpdating(true);
+  const handleUpdateClick = (id: number, title: string) => {
+    setInputToUpdate(id);
+    setInputUpdateValue(title);
+  };
+
+  const cancelUpdateInput = () => {
+    setInputToUpdate(null);
   };
 
   const handleInputUpdateChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -102,6 +135,8 @@ export const Todos = () => {
     decodeToken();
   }, [decodeToken]);
 
+  useHandleToClose(formRef, cancelUpdateInput);
+
   return (
     <Container>
       <div>
@@ -109,20 +144,20 @@ export const Todos = () => {
           {todos.map(({ id, title, isDone, ownerId }) => {
             return (
               <li key={id} className={isDone ? styles['todo-item__done'] : ''}>
-                {isUpdating ? (
-                  <form onSubmit={updateTodo}>
+                {inputToUpdate === id ? (
+                  <form onSubmit={updateTodo} ref={formRef}>
                     <input type="text" value={inputUpdateValue} onChange={handleInputUpdateChange} />
                   </form>
                 ) : (
                   <>
-                    <input type="checkbox" id={`${id}`} />
+                    <input type="checkbox" id={`${id}`} onChange={(event) => checkTodo(event, id)} checked={isDone} />
                     <label htmlFor={`${id}`}>{title}</label>
                   </>
                 )}
 
-                {ownerId === user?.id ? (
+                {ownerId === user?.id && !isDone ? (
                   <span>
-                    <button type="button" onClick={handleUpdateClick}>
+                    <button type="button" onClick={() => handleUpdateClick(id, title)}>
                       Редактировать
                     </button>
                     <button type="button" onClick={() => deleteTodo(id)}>
@@ -140,7 +175,7 @@ export const Todos = () => {
           <form onSubmit={createTodo}>
             <div>
               <label htmlFor="todo">Текст задачи</label>
-              <input type="text" id="todo" onChange={handleChange} />
+              <input type="text" id="todo" value={titleTodo} onChange={handleChange} />
               <button>Создать задачу</button>
             </div>
           </form>

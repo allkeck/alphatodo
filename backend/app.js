@@ -184,10 +184,28 @@ app.post('/api/todo', async function (req, res) {
 app.put('/api/todo', async function (req, res) {
   if (!req.body) return res.sendStatus(400);
 
+  let todo;
   const { id, title: todoTitle, isDone: todoIsDone } = req.body;
 
+  const requestTodo = new Promise((resolve, reject) => {
+    db.get('select id, title, isDone from todos where id=?', id, (err, row) => {
+      if (err) reject(err);
+      if (!row) reject('Задача не найдена');
+      resolve(row);
+    });
+  });
+
+  try {
+    todo = await requestTodo;
+  } catch (error) {
+    res.status(404).send(error);
+  }
+
+  const titleToUpdate = todoTitle || todo.title;
+  const isDoneToUpdate = todoIsDone || todo.isDone;
+
   const updatedTodo = new Promise((resolve, reject) => {
-    db.run('update todos set title=(?), isDone=(?) where id=(?)', [todoTitle, todoIsDone, id], function (err) {
+    db.run('update todos set title=(?), isDone=(?) where id=(?)', [titleToUpdate, isDoneToUpdate, id], function (err) {
       if (err) reject(err);
       resolve(id);
     });
@@ -209,7 +227,7 @@ app.delete('/api/todo/:id', async function (req, res) {
   let todo;
 
   const requestTodo = new Promise((resolve, reject) => {
-    db.get('select id, title, isDone from todos where id=?', [id], (err, row) => {
+    db.get('select id, title, isDone from todos where id=?', id, (err, row) => {
       if (err) reject(err);
       if (!row) reject('Задача не найдена');
       resolve(row);

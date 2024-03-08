@@ -23,12 +23,17 @@ content-type: application/json
 
 ###
 
-DELETE http://localhost:3000/api/todo/24 HTTP/1.1
+DELETE http://localhost:3000/api/todo/43 HTTP/1.1
 content-type: application/json
 
 ###
 
-PUT http://localhost:3000/api/todo/24 HTTP/1.1
+PUT http://localhost:3000/api/todo HTTP/1.1
 content-type: application/json
+
+{
+    "id": 1,
+    "title": "test2"
+}
 
 ###
