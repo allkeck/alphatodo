@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from '../../layout/Container/Container';
 import { Input } from '../../components/Input/Input';
 
-import style from './styles.module.css';
+import styles from './styles.module.css';
 
 interface InputError {
   username?: string;
@@ -62,15 +62,15 @@ function App() {
 
   return (
     <Container>
-      <div>
-        <button type="button" onClick={setAuthType}>
+      <div className={styles['buttons-type__wrapper']}>
+        <button className={`${styles['button-type']} ${urlType === '/api/auth' && styles['button-type_active']}`} type="button" onClick={setAuthType}>
           Войти
         </button>
-        <button type="button" onClick={setRegType}>
-          Зарегестрироваться
+        <button className={`${styles['button-type']} ${urlType === '/api/reg' && styles['button-type_active']}`} type="button" onClick={setRegType}>
+          Зарегистрироваться
         </button>
       </div>
-      <form onSubmit={handleSubmit} className={style.form}>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <Input
           id="username"
           type="text"
@@ -92,7 +92,7 @@ function App() {
           Пароль
         </Input>
 
-        <button>{urlType === '/api/reg' ? 'Зарегестрироваться' : 'Войти'}</button>
+        <button>{urlType === '/api/reg' ? 'Зарегистрироваться' : 'Войти'}</button>
       </form>
     </Container>
   );

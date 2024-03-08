@@ -15,6 +15,7 @@ export const Todos = () => {
   const [inputUpdateValue, setInputUpdateValue] = useState('');
   const [inputToUpdate, setInputToUpdate] = useState<number | null>(null);
   const formRef = useRef(null);
+  const updateInputRef = useRef<HTMLInputElement>(null);
   const [cookies] = useCookies(['token']);
 
   const getTodos = async () => {
@@ -135,52 +136,64 @@ export const Todos = () => {
     decodeToken();
   }, [decodeToken]);
 
+  useEffect(() => {
+    if (updateInputRef.current) {
+      updateInputRef.current.focus();
+    }
+  });
+
   useHandleToClose(formRef, cancelUpdateInput);
 
   return (
     <Container>
-      <div>
-        <ul className={styles['todo-list']}>
-          {todos.map(({ id, title, isDone, ownerId }) => {
-            return (
-              <li key={id} className={isDone ? styles['todo-item__done'] : ''}>
-                {inputToUpdate === id ? (
-                  <form onSubmit={updateTodo} ref={formRef}>
-                    <input type="text" value={inputUpdateValue} onChange={handleInputUpdateChange} />
-                  </form>
-                ) : (
-                  <>
-                    <input type="checkbox" id={`${id}`} onChange={(event) => checkTodo(event, id)} checked={isDone} />
-                    <label htmlFor={`${id}`}>{title}</label>
-                  </>
-                )}
-
-                {ownerId === user?.id && !isDone ? (
-                  <span>
-                    <button type="button" onClick={() => handleUpdateClick(id, title)}>
-                      Редактировать
-                    </button>
-                    <button type="button" onClick={() => deleteTodo(id)}>
-                      Удалить
-                    </button>
-                  </span>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
       {user && (
-        <div>
-          <form onSubmit={createTodo}>
+        <div className={styles['create-todo__form__wrapper']}>
+          <h1>Новая задача</h1>
+          <form className={styles['create-todo__form']} onSubmit={createTodo}>
             <div>
               <label htmlFor="todo">Текст задачи</label>
-              <input type="text" id="todo" value={titleTodo} onChange={handleChange} />
+              <input type="text" id="todo" value={titleTodo} onChange={handleChange} required />
               <button>Создать задачу</button>
             </div>
           </form>
         </div>
       )}
+      <div className={styles['todo-list__wrapper']}>
+        <ul className={styles['todo-list']}>
+          {todos.map(({ id, title, isDone, ownerId }) => {
+            return (
+              <li key={id} className={`${styles['todo-item']} ${isDone && styles['todo-item__done']}`}>
+                {inputToUpdate === id ? (
+                  <form className={styles['update-todo__form']} onSubmit={updateTodo} ref={formRef}>
+                    <input ref={updateInputRef} type="text" value={inputUpdateValue} onChange={handleInputUpdateChange} required />
+                  </form>
+                ) : (
+                  <>
+                    <label className={styles.label} htmlFor={`${id}`}>
+                      <input className={styles.checkbox} type="checkbox" id={`${id}`} onChange={(event) => checkTodo(event, id)} checked={isDone} />
+                      {title}
+                    </label>
+                  </>
+                )}
+
+                <span className={styles['buttons-wrapper']}>
+                  {ownerId === user?.id && !isDone ? (
+                    <button type="button" onClick={() => handleUpdateClick(id, title)}>
+                      <img src="/assets/icons/pencil.svg" alt="Редактировать" width="15" height="15" />
+                    </button>
+                  ) : null}
+
+                  {ownerId === user?.id || isDone ? (
+                    <button type="button" onClick={() => deleteTodo(id)}>
+                      <img src="/assets/icons/trash.svg" alt="Удалить" width="15" height="15" />
+                    </button>
+                  ) : null}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </Container>
   );
 };

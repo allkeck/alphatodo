@@ -128,7 +128,7 @@ app.post('/api/auth', async function (req, res) {
 app.get('/api/todos', async function (req, res) {
   let result = [];
   let token = '';
-  let sql = 'SELECT * FROM todos where isDone=FALSE order by isDone asc';
+  let sql = 'SELECT * FROM todos where isDone=FALSE';
 
   try {
     token = verifyJWT(req.cookies.token);
@@ -137,7 +137,7 @@ app.get('/api/todos', async function (req, res) {
   }
 
   if (token.id) {
-    sql = `SELECT * FROM todos order by isDone asc, ownerId=${token.id} asc`;
+    sql = `SELECT * FROM todos order by isDone asc`;
   }
 
   const requestTodos = new Promise((resolve, reject) => {

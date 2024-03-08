@@ -1,0 +1,48 @@
+.input-wrapper {
+  padding-bottom: 12px;
+  position: relative;
+}
+
+.input-wrapper_error .input {
+  border-color: #ff8080;
+}
+
+.label {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-18px);
+  font-size: 14px;
+  will-change: top;
+  transition: top 250ms ease;
+}
+
+.input {
+  width: 100%;
+  height: 35px;
+  border-style: solid;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #40a2e3;
+}
+
+.input:focus + .label,
+.input:valid + .label {
+  font-size: 10px;
+  top: -14px;
+  transform: none;
+  color: #40a2e3;
+}
+
+.error {
+  position: absolute;
+  bottom: 0;
+  left: 3px;
+  font-size: 10px;
+  color: #ff8080;
+  line-height: normal;
+}

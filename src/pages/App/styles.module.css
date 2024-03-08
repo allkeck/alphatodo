@@ -1,3 +1,37 @@
+.buttons-type__wrapper {
+  display: flex;
+  column-gap: 16px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.button-type {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+.button-type_active {
+  position: relative;
+  color: #40a2e3;
+}
+
+.button-type_active::after {
+  content: '';
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  background-color: #40a2e3;
+}
+
 .form {
-  border: 1px solid blue;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  min-width: 320px;
+  margin-top: 16px;
+  padding: 12px;
 }
