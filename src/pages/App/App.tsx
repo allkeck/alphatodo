@@ -62,6 +62,11 @@ function App() {
 
   return (
     <Container>
+      <div className={styles['anonimus-wrapper']}>
+        <button type="button" onClick={() => navigate('/todos')}>
+          Посмотреть список
+        </button>
+      </div>
       <div className={styles['buttons-type__wrapper']}>
         <button className={`${styles['button-type']} ${urlType === '/api/auth' && styles['button-type_active']}`} type="button" onClick={setAuthType}>
           Войти
