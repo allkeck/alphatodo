@@ -1,0 +1,9 @@
+.todo-list {
+  list-style-type: none;
+}
+
+.todo-item__done {
+  opacity: 0.5;
+  text-decoration: line-through;
+  pointer-events: none;
+}
