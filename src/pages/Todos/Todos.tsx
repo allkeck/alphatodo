@@ -91,8 +91,8 @@ export const Todos = () => {
     console.log(data);
   };
 
-  const checkTodo = async (event: ChangeEvent<HTMLInputElement>, id: number) => {
-    console.log(event);
+  const checkTodo = async (id: number) => {
+    if (!user) return;
 
     const response = await fetch('/api/todo', {
       method: 'put',
@@ -162,7 +162,7 @@ export const Todos = () => {
         <ul className={styles['todo-list']}>
           {todos.map(({ id, title, isDone, ownerId, ownerName }) => {
             return (
-              <li key={id} className={`${styles['todo-item']} ${isDone && styles['todo-item__done']}`}>
+              <li key={id} className={`${styles['todo-item']} ${isDone && styles['todo-item__done']} ${!user && styles['todo-item_no-user']}`}>
                 {inputToUpdate === id ? (
                   <form className={styles['update-todo__form']} onSubmit={updateTodo} ref={formRef}>
                     <input ref={updateInputRef} type="text" value={inputUpdateValue} onChange={handleInputUpdateChange} required />
@@ -170,7 +170,7 @@ export const Todos = () => {
                 ) : (
                   <>
                     <label className={styles.label} htmlFor={`${id}`}>
-                      <input className={styles.checkbox} type="checkbox" id={`${id}`} onChange={(event) => checkTodo(event, id)} checked={isDone} />
+                      <input className={styles.checkbox} type="checkbox" id={`${id}`} onChange={() => checkTodo(id)} checked={isDone} />
                       {title}
                     </label>
                   </>

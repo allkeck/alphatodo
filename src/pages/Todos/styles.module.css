@@ -41,6 +41,14 @@
   transition: text-decoration 2s ease;
 }
 
+.todo-item_no-user .checkbox {
+  display: none;
+}
+
+.todo-item_no-user label {
+  grid-template-columns: 1fr;
+}
+
 .todo-item__done {
   border-color: #f9f9f9;
 }
