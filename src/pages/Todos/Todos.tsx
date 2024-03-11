@@ -190,9 +190,11 @@ export const Todos = () => {
                   ) : null}
                 </span>
 
-                <span className={`${styles['owner-name']} ${user?.username === ownerName && styles['owner-name_youown']}`}>
-                  {user?.username === ownerName ? 'You' : ownerName}
-                </span>
+                {user && (
+                  <span className={`${styles['owner-name']} ${user.username === ownerName && styles['owner-name_youown']}`}>
+                    {user.username === ownerName ? 'You' : ownerName}
+                  </span>
+                )}
               </li>
             );
           })}
