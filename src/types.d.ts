@@ -3,6 +3,7 @@ export type Todo = {
   ownerId: number;
   title: string;
   isDone: boolean;
+  ownerName: string;
 };
 
 export type User = {

@@ -140,7 +140,7 @@ export const Todos = () => {
     if (updateInputRef.current) {
       updateInputRef.current.focus();
     }
-  });
+  }, [inputToUpdate]);
 
   useHandleToClose(formRef, cancelUpdateInput);
 
@@ -160,7 +160,7 @@ export const Todos = () => {
       )}
       <div className={styles['todo-list__wrapper']}>
         <ul className={styles['todo-list']}>
-          {todos.map(({ id, title, isDone, ownerId }) => {
+          {todos.map(({ id, title, isDone, ownerId, ownerName }) => {
             return (
               <li key={id} className={`${styles['todo-item']} ${isDone && styles['todo-item__done']}`}>
                 {inputToUpdate === id ? (
@@ -188,6 +188,10 @@ export const Todos = () => {
                       <img src="/assets/icons/trash.svg" alt="Удалить" width="15" height="15" />
                     </button>
                   ) : null}
+                </span>
+
+                <span className={`${styles['owner-name']} ${user?.username === ownerName && styles['owner-name_youown']}`}>
+                  {user?.username === ownerName ? 'You' : ownerName}
                 </span>
               </li>
             );

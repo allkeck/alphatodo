@@ -137,7 +137,7 @@ app.get('/api/todos', async function (req, res) {
   }
 
   if (token.id) {
-    sql = `SELECT * FROM todos order by isDone asc`;
+    sql = `select id, title, isDone, ownerId, (select login from users where id = ownerId) as ownerName from todos order by isDone asc`;
   }
 
   const requestTodos = new Promise((resolve, reject) => {

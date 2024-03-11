@@ -56,6 +56,18 @@
   display: none;
 }
 
+.owner-name {
+  position: absolute;
+  bottom: 1px;
+  right: 2px;
+  font-size: 10px;
+  line-height: normal;
+}
+
+.owner-name_youown {
+  color: gold;
+}
+
 .update-todo__form {
   display: flex;
   align-items: center;
