@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 backend/db/todos.sqlite
+backend/app.js
