@@ -24,5 +24,7 @@ npm run build
 # Перед запуском проекта установить перменную окружения
 export JWT_SECRET=<secret string>
 
-node app.js
+cd backend
+npm install
+npm run app
 ```
