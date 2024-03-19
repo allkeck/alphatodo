@@ -145,7 +145,7 @@ app.get('/api/todos', async function (req, res) {
     console.log(error);
   }
 
-  if (token.id) {
+  if (token?.id) {
     sql = `select id, title, isDone, ownerId, (select login from users where id = ownerId) as ownerName from todos order by isDone asc`;
   }
 

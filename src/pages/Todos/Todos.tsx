@@ -159,46 +159,50 @@ export const Todos = () => {
         </div>
       )}
       <div className={styles['todo-list__wrapper']}>
-        <ul className={styles['todo-list']}>
-          {todos.map(({ id, title, isDone, ownerId, ownerName }) => {
-            return (
-              <li key={id} className={`${styles['todo-item']} ${isDone && styles['todo-item__done']} ${!user && styles['todo-item_no-user']}`}>
-                {inputToUpdate === id ? (
-                  <form className={styles['update-todo__form']} onSubmit={updateTodo} ref={formRef}>
-                    <input ref={updateInputRef} type="text" value={inputUpdateValue} onChange={handleInputUpdateChange} required />
-                  </form>
-                ) : (
-                  <>
-                    <label className={styles.label} htmlFor={`${id}`}>
-                      <input className={styles.checkbox} type="checkbox" id={`${id}`} onChange={() => checkTodo(id)} checked={isDone} />
-                      {title}
-                    </label>
-                  </>
-                )}
+        {todos.length === 0 ? (
+          <span>Нет открытых задач</span>
+        ) : (
+          <ul className={styles['todo-list']}>
+            {todos.map(({ id, title, isDone, ownerId, ownerName }) => {
+              return (
+                <li key={id} className={`${styles['todo-item']} ${isDone && styles['todo-item__done']} ${!user && styles['todo-item_no-user']}`}>
+                  {inputToUpdate === id ? (
+                    <form className={styles['update-todo__form']} onSubmit={updateTodo} ref={formRef}>
+                      <input ref={updateInputRef} type="text" value={inputUpdateValue} onChange={handleInputUpdateChange} required />
+                    </form>
+                  ) : (
+                    <>
+                      <label className={styles.label} htmlFor={`${id}`}>
+                        <input className={styles.checkbox} type="checkbox" id={`${id}`} onChange={() => checkTodo(id)} checked={isDone} />
+                        {title}
+                      </label>
+                    </>
+                  )}
 
-                <span className={styles['buttons-wrapper']}>
-                  {ownerId === user?.id && !isDone ? (
-                    <button type="button" onClick={() => handleUpdateClick(id, title)}>
-                      <img src="/assets/icons/pencil.svg" alt="Редактировать" width="15" height="15" />
-                    </button>
-                  ) : null}
+                  <span className={styles['buttons-wrapper']}>
+                    {ownerId === user?.id && !isDone ? (
+                      <button type="button" onClick={() => handleUpdateClick(id, title)}>
+                        <img src="/assets/icons/pencil.svg" alt="Редактировать" width="15" height="15" />
+                      </button>
+                    ) : null}
 
-                  {ownerId === user?.id || isDone ? (
-                    <button type="button" onClick={() => deleteTodo(id)}>
-                      <img src="/assets/icons/trash.svg" alt="Удалить" width="15" height="15" />
-                    </button>
-                  ) : null}
-                </span>
-
-                {user && (
-                  <span className={`${styles['owner-name']} ${user.username === ownerName && styles['owner-name_youown']}`}>
-                    {user.username === ownerName ? 'You' : ownerName}
+                    {ownerId === user?.id || isDone ? (
+                      <button type="button" onClick={() => deleteTodo(id)}>
+                        <img src="/assets/icons/trash.svg" alt="Удалить" width="15" height="15" />
+                      </button>
+                    ) : null}
                   </span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+
+                  {user && (
+                    <span className={`${styles['owner-name']} ${user.username === ownerName && styles['owner-name_youown']}`}>
+                      {user.username === ownerName ? 'You' : ownerName}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </Container>
   );
